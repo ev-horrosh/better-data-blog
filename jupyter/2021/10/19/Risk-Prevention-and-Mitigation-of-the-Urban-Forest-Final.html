@@ -191,6 +191,73 @@ like to combine address and street name to find out longitude and latitude of tr
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p><div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ny_trees</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Forestry_Tree_Points.csv&#39;</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="o">.</span><span class="n">columns</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;objectid&#39;</span><span class="p">,</span><span class="s1">&#39;plantingspaceglobalid&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;geometry&#39;</span><span class="p">,</span><span class="s1">&#39;globalid&#39;</span><span class="p">,</span><span class="s1">&#39;riskratingdate&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;planteddate&#39;</span><span class="p">,</span><span class="s1">&#39;createddate&#39;</span><span class="p">,</span><span class="s1">&#39;updateddate&#39;</span><span class="p">,</span><span class="s1">&#39;stumpdiameter&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;genusspecies&#39;</span><span class="p">:</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">})</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="c1"># df_ny_trees[&#39;botanical_name&#39;]=df_ny_trees[&#39;botanical_name&#39;].str.split(&#39;-&#39;).str[0]</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;tpcondition&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;tpcondition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;tpstructure&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;tpstructure&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;dbh&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;dbh&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;riskrating&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;riskrating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="c1"># df_ny_trees[&#39;botanical_name&#39;]=df_ny_trees[&#39;botanical_name&#39;].str.split(&#39;-&#39;).str[0]</span>
+<span class="n">df_ny_trees</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;tpcondition&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;unknown&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+                         <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+                         <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">(</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+                          <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+                          <span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;location&#39;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># df_ny_trees.loc[df_ny_trees[&#39;botanical_name&#39;]==&quot;prunus serrulata &#39;green leaf&#39; &quot;,&#39;botanical_name&#39;]=&#39;prunus serrulata&#39;</span>
+<span class="c1"># df_ny_trees[&#39;botanical_name&#39;]=df_ny_trees[&#39;botanical_name&#39;].str.extract(&#39;(^[,. A-Za-z]*[A-Za-z])&#39;)</span>
+
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="o">~</span><span class="p">(</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;dbh&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">40</span><span class="p">)]</span>
+
+<span class="n">drop_rows</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()[(</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">&lt;</span><span class="mi">50</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span>
+
+<span class="n">df_ny_trees</span><span class="o">=</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="o">~</span><span class="n">df_ny_trees</span><span class="p">[</span><span class="s1">&#39;botanical_name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">drop_rows</span><span class="p">)]</span>
+
+<span class="n">df_ny_trees</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+</p>
+    </details>
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(295882, 7)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
 <div class="inner_cell">
@@ -442,7 +509,7 @@ Name: botanical_name, Length: 153, dtype: int64</pre>
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ny_trees_wrangled</span><span class="p">[</span><span class="s1">&#39;riskrating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_ny_trees_wrangled</span><span class="p">[</span><span class="s1">&#39;riskrating&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -457,19 +524,9 @@ Name: botanical_name, Length: 153, dtype: int64</pre>
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>3     61217
-6     59497
-7     48246
-5     37648
-8     34804
-9     22197
-4     18762
-10     9293
-11     2807
-12     1314
-2        51
-1        27
-0        19
+<pre>3    61217
+6    59497
+7    48246
 Name: riskrating, dtype: int64</pre>
 </div>
 
@@ -564,29 +621,6 @@ Name: riskrating, dtype: int64</pre>
 </div>
     
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Dumping-the-model">Dumping the model<a class="anchor-link" href="#Dumping-the-model"> </a></h1>
-</div>
-</div>
-</div>
-    
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;nyc_trees.joblib&#39;</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    
-
     
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -627,10 +661,35 @@ Name: riskrating, dtype: int64</pre>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Dumping-the-model">Dumping the model<a class="anchor-link" href="#Dumping-the-model"> </a></h1>
+</div>
+</div>
+</div>
     
     
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span><span class="o">=</span> <span class="n">load</span><span class="p">(</span><span class="s1">&#39;nyc_trees.joblib&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p><div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
@@ -644,7 +703,8 @@ Name: riskrating, dtype: int64</pre>
     </div>
 </div>
 </div>
-
+</p>
+    </details>
 <div class="output_wrapper">
 <div class="output">
 
@@ -664,69 +724,28 @@ Name: riskrating, dtype: int64</pre>
 
 </div>
     
-
+print(classification_report(y_test,
+                      model.predict(X_test),
+                      target_names =[ 7,  8,  3,  6,  9,  5,  4, 10, 12, 11,  2,  0,  1].sort()))
     
     
 <div class="cell border-box-sizing code_cell rendered">
-<div class="input">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p><div class="input">
 
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span>
-                      <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span>
-                      <span class="n">target_names</span> <span class="o">=</span><span class="p">[</span> <span class="mi">7</span><span class="p">,</span>  <span class="mi">8</span><span class="p">,</span>  <span class="mi">3</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>  <span class="mi">9</span><span class="p">,</span>  <span class="mi">5</span><span class="p">,</span>  <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span>  <span class="mi">2</span><span class="p">,</span>  <span class="mi">0</span><span class="p">,</span>  <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sort</span><span class="p">()))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;y_val&#39;</span><span class="p">:</span> <span class="n">y_test</span><span class="p">,</span>
+        <span class="s1">&#39;y_pred&#39;</span><span class="p">:</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </pre></div>
 
     </div>
 </div>
 </div>
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>              precision    recall  f1-score   support
-
-           0       0.00      0.00      0.00         2
-           1       0.00      0.00      0.00         4
-           2       0.00      0.00      0.00         9
-           3       0.46      0.66      0.54     12198
-           4       0.22      0.03      0.06      3749
-           5       0.23      0.09      0.13      7486
-           6       0.27      0.39      0.32     12085
-           7       0.28      0.34      0.31      9580
-           8       0.26      0.18      0.21      7026
-           9       0.27      0.21      0.24      4402
-          10       0.24      0.16      0.19      1849
-          11       0.16      0.05      0.08       528
-          12       0.09      0.03      0.05       259
-
-    accuracy                           0.32     59177
-   macro avg       0.19      0.16      0.16     59177
-weighted avg       0.30      0.32      0.30     59177
-
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="output_subarea output_stream output_stderr output_text">
-<pre>C:\Users\evhorrosh\Desktop\VSTEST\env\lib\site-packages\sklearn\metrics\_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-C:\Users\evhorrosh\Desktop\VSTEST\env\lib\site-packages\sklearn\metrics\_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-C:\Users\evhorrosh\Desktop\VSTEST\env\lib\site-packages\sklearn\metrics\_classification.py:1248: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
-  _warn_prf(average, modifier, msg_start, len(result))
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
+</p>
+    </details>
 </div>
     
 
@@ -865,6 +884,38 @@ A Couple thoughts that come to my mind for further investigation.</p>
     
     
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">![</span>map<span class="o">](</span>images/nyc_tree_map.png<span class="o">)</span>.
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>&#39;[map]&#39; is not recognized as an internal or external command,
+operable program or batch file.
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
 <details class="description">
       <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
         <p><div class="input">
@@ -905,11 +956,6 @@ A Couple thoughts that come to my mind for further investigation.</p>
 <li>Real data is messy. Evaluation of the data is done by many different people and if there are protocols for capturing the data, ultimately it's up to a person's judgement.</li>
 <li>Rushing to the baseline. It's something I didn't remember until the end. It took me more time to clean the datasets that at the end were not so useful. Like Buffalo trees dataset at the end was a super high accuracy score, probably due to calculations were done from the same formula which caused leakage since it was so highly correlated.    </li>
 <li>It should be a cutoff time when you uknow that the dataset can't be salvaged, you need more data. </li>
-</ul>
-<h3 id="On-the-tech-side">On the tech side<a class="anchor-link" href="#On-the-tech-side"> </a></h3><ul>
-<li>To find out the location of each tree I'm combining <code>address</code> and <code>street</code> into a new column.
-  Having a full address and using <code>geopy</code> I'm obtaining longitude and latitude data. 
-  Depending on the dataset It'll take a while. Best suited for overnight tasks.</li>
 </ul>
 
 </div>
